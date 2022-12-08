@@ -36,9 +36,7 @@ Bureaucrat& Bureaucrat::operator=(const Bureaucrat &ref) {
 	return (*this);
 }
 
-Bureaucrat::Bureaucrat() :_name("default"), _grade(150){
-	cout << "Default constructor called."
-}
+Bureaucrat::Bureaucrat() :_name("default"), _grade(150){}
 
 void Bureaucrat::decrement(int amount) {
 	if (_grade + amount > 150)
@@ -50,4 +48,8 @@ void Bureaucrat::increment(int amount) {
 	if (_grade - amount < 1)
 		throw gradeTooHighException();
 	_grade -= amount;
+}
+
+void Bureaucrat::signForm(Form &form) {
+	form.beSigned(*this);
 }

@@ -14,7 +14,7 @@ int main(){
 	std::cout << "d is " << d << std::endl;
 
 	cout << "a is " << a.toInt() << " as integer"<< "\n";
-	cout << "b is " << b.toInt() << " as int meger"<< "\n";
+	cout << "b is " << b.toInt() << " as integer"<< "\n";
 	cout << "c is " << c.toInt() << " as integer"<< "\n";
 	cout << "d is " << d.toInt() << " as integer"<< "\n";
 }

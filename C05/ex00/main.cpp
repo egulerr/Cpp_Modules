@@ -8,9 +8,6 @@ int main()
 	} catch (const std::exception &a){
 		std::cout << a.what() << std::endl;
 	}
-	//Bureaucrat eyup("eyup", 151);
-
-
 	try{
 		Bureaucrat eyup("eyup", 1);
 		std::cout << eyup << std::endl;
@@ -30,7 +27,7 @@ int main()
 		std::cout << a.what() << std::endl;
 	}
 	try{
-		Bureaucrat eyup("eyup", 2);
+		Bureaucrat eyup("eyup", 150);
 		std::cout << eyup << std::endl;
 	} catch (const std::exception &a){
 		std::cout << a.what() << std::endl;

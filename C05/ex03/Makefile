@@ -1,9 +1,14 @@
-NAME = Bureaucrat
+NAME = Forms
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -g -std=c++98
 RM = rm -rf
-SRCS =	main.cpp		\
-		Bureaucrat.cpp	\
+SRCS =	main.cpp					\
+		Bureaucrat.cpp				\
+		Form.cpp					\
+		ShrubberyCreationForm.cpp	\
+		RobotomyRequestForm.cpp		\
+		PresidentialPardonForm.cpp	\
+		Intern.cpp					\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -11,7 +16,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CPP) $(CPPFLAGS) -o $(NAME) $(OBJS)
-	@echo $(B)Bureaucrat is ready!
+	@echo $(B)Forms is ready!
 
 %.o: %.cpp
 	@echo $(R)Complining [$<]
