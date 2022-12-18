@@ -1,9 +1,9 @@
-NAME = Bureaucrat
+NAME = convert
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -g -std=c++98
 RM = rm -rf
 SRCS =	main.cpp		\
-		Bureaucrat.cpp	\
+		converts.cpp	\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -11,8 +11,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CPP) $(CPPFLAGS) -o $(NAME) $(OBJS)
-	@bash -c "clear"
-	@echo $(B)Bureaucrat is ready!
+	@echo $(B)Scalar types is ready!
 
 %.o: %.cpp
 	@echo $(R)Complining [$<]

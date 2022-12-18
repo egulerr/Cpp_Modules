@@ -1,13 +1,13 @@
 #include "ShrubberyCreationForm.hpp"
 
-ShrubberyCreationForm::ShrubberyCreationForm(string target) : Form("ShrubberyCreationForm", 145, 137){
+ShrubberyCreationForm::ShrubberyCreationForm(string target) : AForm("ShrubberyCreationForm", 145, 137){
 	this->target = target;
 }
 
 ShrubberyCreationForm::~ShrubberyCreationForm(){}
 
 ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm &ref)
-	: Form(ref)
+	: AForm(ref)
 {
 	this->target = ref.target;
 }

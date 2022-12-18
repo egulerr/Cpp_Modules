@@ -7,5 +7,4 @@ int main(){
 
 	hakan.takeDamage(40);
 	hakan.ScavTrap::attack("Burak");
-	getchar();
 }

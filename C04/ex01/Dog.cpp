@@ -2,8 +2,8 @@
 
 Dog::Dog() {
 	this->type = "Dog";
-	brain = new Brain;
 	cout << "Dog default constructor called." << endl;
+	brain = new Brain;
 }
 
 Dog::~Dog() {
@@ -15,7 +15,7 @@ Dog::Dog(const Dog &ref) {
 	*this = ref;
 }
 
-Dog Dog::operator=(const Dog &ref) {
+Dog &Dog::operator=(const Dog &ref) {
 	this->type = ref.type;
 	brain = new Brain;
 	*brain = *(ref.brain);

@@ -38,16 +38,16 @@ Bureaucrat& Bureaucrat::operator=(const Bureaucrat &ref) {
 
 Bureaucrat::Bureaucrat() :_name("default"), _grade(150){}
 
-void Bureaucrat::decrement(int amount) {
-	if (_grade + amount > 150)
+void Bureaucrat::decrement() {
+	if (_grade +1 > 150)
 		throw gradeTooLowException();
-	_grade += amount;
+	_grade += 1;
 }
 
-void Bureaucrat::increment(int amount) {
-	if (_grade - amount < 1)
+void Bureaucrat::increment() {
+	if (_grade -1 < 1)
 		throw gradeTooHighException();
-	_grade -= amount;
+	_grade -= 1;
 }
 
 void Bureaucrat::signForm(Form &form) {

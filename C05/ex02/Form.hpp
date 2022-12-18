@@ -10,18 +10,18 @@ using std::string;
 
 class Bureaucrat;
 
-class Form{
+class AForm{
 	private:
 		const string	name;
 		bool			sign;
 		const int		gradeToSign;
 		const int 		gradeToExecute;
 	public:
-		Form();
-		Form(const string name, int gradeToSign, int gradeToExecute);
-		Form(const Form &ref);
-		Form& operator = (const Form &ref);
-		virtual ~Form();
+		AForm();
+		AForm(const string name, int gradeToSign, int gradeToExecute);
+		AForm(const AForm &ref);
+		AForm& operator = (const AForm &ref);
+		virtual ~AForm();
 		const string getName()const{return (name);}
 		bool getSign() const {return (sign);}
 		int getGradeToSign() const {return (gradeToSign);}
@@ -36,6 +36,6 @@ class Form{
 		virtual void execute(Bureaucrat const &executor) const = 0;
 };
 
-std::ostream& operator << (std::ostream &out, Form &in);
+std::ostream& operator << (std::ostream &out, AForm &in);
 
 #endif

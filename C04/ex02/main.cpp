@@ -14,5 +14,6 @@ int main(){
 	a->makeSound();
 	delete j;
 	delete i;
+	delete a;
 	return 0;
 }

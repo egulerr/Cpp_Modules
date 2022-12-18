@@ -2,8 +2,8 @@
 
 Cat::Cat() {
 	this->type = "Cat";
-	brain = new Brain;
 	cout << "Cat default constructor called." << endl;
+	brain = new Brain;
 }
 
 Cat::~Cat() {

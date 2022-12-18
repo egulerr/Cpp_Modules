@@ -11,7 +11,7 @@ public:
 	Brain();
 	~Brain();
 	Brain(const Brain &ref);
-	Brain operator = (const Brain &ref);
+	Brain &operator = (const Brain &ref);
 private:
 	string ideas[100];
 };

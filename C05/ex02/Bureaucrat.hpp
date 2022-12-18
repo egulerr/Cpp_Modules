@@ -7,7 +7,7 @@ using std::endl;
 using std::string;
 using std::cout;
 
-class Form;
+class AForm;
 
 class Bureaucrat{
 	private:
@@ -31,10 +31,10 @@ class Bureaucrat{
 		};
 		std::string	getName(){return _name;}
 		int			getGrade() const {return _grade;}
-		void		increment(int amount);
-		void		decrement(int amount);
-		void		signForm(Form &form);
-		void		executeForm(Form const &form);
+		void		increment();
+		void		decrement();
+		void		signForm(AForm &form);
+		void		executeForm(AForm const &form);
 };
 
 std::ostream& operator<<(std::ostream &out, Bureaucrat &in);

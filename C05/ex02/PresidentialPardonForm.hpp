@@ -7,7 +7,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-class PresidentialPardonForm: public Form{
+class PresidentialPardonForm: public AForm{
 private:
 	string target;
 	PresidentialPardonForm();

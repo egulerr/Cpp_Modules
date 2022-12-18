@@ -12,7 +12,7 @@ Animal::Animal(const Animal &ref) {
 	*this = ref;
 }
 
-Animal Animal::operator=(const Animal &ref) {
+Animal& Animal::operator=(const Animal &ref) {
 	this->type = ref.type;
 	return (*this);
 }

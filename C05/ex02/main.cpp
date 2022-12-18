@@ -52,4 +52,10 @@ int main( void ) {
 		pres.execute(ebrar);
 		ebrar.executeForm(pres);
 	}
+	{
+		Bureaucrat mehmet = Bureaucrat("mehmet", 3);
+		PresidentialPardonForm pres = PresidentialPardonForm("mehmet");
+		pres.execute(mehmet);
+		mehmet.executeForm(pres);
+	}
 }

@@ -8,7 +8,7 @@ using std::cout;
 using std::string;
 using std::endl;
 
-class RobotomyRequestForm: public Form{
+class RobotomyRequestForm: public AForm{
 private:
 	string target;
 	RobotomyRequestForm();

@@ -5,6 +5,8 @@ int main()
 	try{
 		Bureaucrat eyup("eyup", 12);
 		std::cout << eyup << std::endl;
+		eyup.increment();
+		cout <<"grade: "<< eyup.getGrade() << endl;
 	} catch (const std::exception &a){
 		std::cout << a.what() << std::endl;
 	}

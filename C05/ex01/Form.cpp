@@ -41,6 +41,7 @@ void Form::beSigned(Bureaucrat &bureaucrat) {
 		cout << bureaucrat.getName() << " has signed " << this->name << endl;
 	} else{
 		cout << bureaucrat.getName() << " can't sign " << this->name << endl;
+		cout << *this << endl;
 		throw Form::gradeTooLowException();
 	}
 }

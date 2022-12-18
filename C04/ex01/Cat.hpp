@@ -9,7 +9,7 @@ private:
 	Brain *brain;
 public:
 	Cat();
-	~Cat();
+	virtual ~Cat();
 	Cat(const Cat &ref);
 	Cat operator = (const Cat &ref);
 	string getType() const;

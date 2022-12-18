@@ -18,7 +18,6 @@ public:
 	ClapTrap (const ClapTrap &ref);
 	ClapTrap(string name, unsigned int health, unsigned int energy, unsigned int damage);
 	~ClapTrap();
-	//4 parameter constructor
 	ClapTrap & operator = (const ClapTrap &ref);
 	//setter
 	void setName(string name);

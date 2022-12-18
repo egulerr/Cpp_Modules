@@ -9,9 +9,9 @@ private:
 	Brain *brain;
 public:
 	Dog();
-	~Dog();
+	virtual ~Dog();
 	Dog(const Dog &ref);
-	Dog operator = (const Dog &ref);
+	Dog &operator = (const Dog &ref);
 	string getType() const;
 	void makeSound() const;
 };

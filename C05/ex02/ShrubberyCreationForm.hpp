@@ -8,7 +8,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-class ShrubberyCreationForm: public Form{
+class ShrubberyCreationForm: public AForm{
 private:
 	string target;
 	ShrubberyCreationForm();
