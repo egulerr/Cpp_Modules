@@ -1,10 +1,11 @@
 #include "BitcoinExchange.hpp"
  
-int main()
-{
-    Bitcoin b1;
+int main(int ac, char **av) {
+    Bitcoin btc;
 
-    b1.btc_map.insert(std::pair<std::string, double>("iki", 2));
-    Bitcoin btc2(b1);
-    std::cout << btc2.btc_map.find("iki")->second << std::endl;
+    if (ac == 2 && btc.checkIsOpen(av)) {
+        btc.readFile(av[1]);
+    }
+    else
+        std::cout << "Error: could not open file." << std::endl;
 }
