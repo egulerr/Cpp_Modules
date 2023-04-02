@@ -18,4 +18,5 @@ class Bitcoin {
 
         std::vector<std::string> &checkDates(std::vector<std::string> &rows);
         std::vector<std::string> &checkValue(std::vector<std::string> &rows);
+        void fillData(std::vector<std::string> &rows);
 };

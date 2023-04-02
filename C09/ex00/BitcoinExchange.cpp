@@ -32,16 +32,13 @@ void Bitcoin::readFile(char *av) {
     while (std::getline(file, row)) {
         rows.push_back(row);
     }
-    /* std::cout << "önce row:" << std::endl;  
-    for (std::vector<std::string>::iterator it = rows.begin(); it != rows.end(); ++it) {
-        std::cout << *it << std::endl;
-    }  */
     checkDates(rows);
     checkValue(rows);
-    std::cout << "sonra row:" << std::endl;  
+    fillData(rows);
+    std::cout << "önce row:" << std::endl;  
     for (std::vector<std::string>::iterator it = rows.begin(); it != rows.end(); ++it) {
         std::cout << *it << std::endl;
-    }   
+    } 
 }
 
 std::vector<std::string> &Bitcoin::checkDates(std::vector<std::string> &rows) {
@@ -136,6 +133,44 @@ std::vector<std::string> &Bitcoin::checkValue(std::vector<std::string> &rows) {
     }
     return rows;
 }
+
+void Bitcoin::fillData(std::vector<std::string> &rows) {
+    std::ifstream file("data.csv");
+    std::string row;
+    std::map<std::string, double> database;
+
+    // Read data from the file into the map
+    std::getline(file, row); // skip the first line
+    while (std::getline(file, row)) {
+        size_t found = row.find(',');
+        std::string date = row.substr(0, found);
+        std::string value = row.substr(found + 1);
+        double num = std::stod(value);
+        database.insert(std::pair<std::string, double>(date, num));
+    }
+
+    for (size_t i = 0; i < rows.size(); i++) {
+        if (rows[i].find("Error") != std::string::npos)
+            continue;
+        size_t found = rows[i].find('|');
+        std::string date = rows[i].substr(0, found);
+        date = date.substr(0, date.size()-1);
+        std::string value = rows[i].substr(found + 1);
+        std::map<std::string, double>::iterator it = database.find(date);
+        if (it != database.end()) {
+            double result = it->second * std::stod(value);
+            rows[i] = date + " => " + value + " = " + std::to_string(result);
+        } else {
+            it = database.lower_bound(date);
+            if (it != database.begin()) {
+                it--;
+                double result = it->second * std::stod(value);
+                rows[i] = it->first + " => " + value + " = " + std::to_string(result);
+            }
+        }
+    }
+}
+
 
 
 
