@@ -29,9 +29,8 @@ void Bitcoin::readFile(char *av) {
 
 
     std::getline(file, row); // ilk satırı oku ve atla
-    while (std::getline(file, row)) {
+    while (std::getline(file, row))
         rows.push_back(row);
-    }
     checkDates(rows);
     checkValue(rows);
     fillData(rows);
