@@ -17,5 +17,4 @@ class RPN {
         int checkInput(char **input);
         int executeOperation(char operatr, int num, int num2);
         void initializeRPN();
-        bool isOperator(char c);
 };

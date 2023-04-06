@@ -69,7 +69,6 @@ int RPN::checkArguments(char *av)
 	char **args = seperateSpace(av);
 	if (checkInput(args))
 	{
-
 		return 1;
 	}
 	else
