@@ -6,10 +6,9 @@ Bitcoin::~Bitcoin() {}
 
 Bitcoin::Bitcoin(const Bitcoin &ref) { *this = ref; }
 
-Bitcoin &Bitcoin::operator=(const Bitcoin &ref) {
-    for (std::map<std::string, double>::const_iterator it = ref.btc_map.begin(); it != ref.btc_map.end(); ++it) {
+Bitcoin &Bitcoin::operator=(const Bitcoin &ref){
+    for (std::map<std::string, double>::const_iterator it = ref.btc_map.begin(); it != ref.btc_map.end(); ++it)
         this->btc_map.insert(*it);
-    }
     return (*this);
 }
 
@@ -17,48 +16,56 @@ int Bitcoin::checkIsOpen(char **av) const {
     std::ifstream file(av[1]);
     if (file.good())
         return (1);
-    else 
+    else
         return (0);
 }
 
 void Bitcoin::readFile(char *av) {
     std::ifstream file(av);
     std::string row;
-    std::vector<std::string> tokens;
-    std::vector<std::string> rows;
+    std::string *rows = nullptr;
+    int size = 0;
 
-
-    std::getline(file, row); // ilk satırı oku ve atla
+    std::getline(file, row); 
     while (std::getline(file, row))
-        rows.push_back(row);
-    checkDates(rows);
-    checkValue(rows);
-    fillData(rows);
-    std::cout << "önce row:" << std::endl;  
-    for (std::vector<std::string>::iterator it = rows.begin(); it != rows.end(); ++it) {
-        std::cout << *it << std::endl;
-    } 
+    {
+        std::string *temp = new std::string[size + 1];
+        for (int i = 0; i < size; i++)
+            temp[i] = rows[i];
+        delete[] rows;    
+        rows = temp;     
+        rows[size] = row;
+        size++;          
+    }
+    checkDates(rows, size);
+    checkValue(rows, size);
+    fillData(rows, size);  
+    for (int i = 0; i < size; i++)
+        std::cout << rows[i] << std::endl;
+    delete[] rows; 
 }
 
-std::vector<std::string> &Bitcoin::checkDates(std::vector<std::string> &rows) {
-    std::vector<int> years;
-    std::vector<int> months;
-    std::vector<int> days;
-    std::vector<std::string> dates;
+void Bitcoin::checkDates(std::string *rows, int size) {
+    int maxDateCount = size;
+    std::string dates[maxDateCount];
+    int years[maxDateCount];
+    int months[maxDateCount];
+    int days[maxDateCount];
+    int dateCount = 0;
 
-    for (unsigned int i = 0; i < rows.size(); i++){
+    for (int i = 0; i < size; i++) {
         std::string row = rows[i];
         size_t found = row.find("|");
-        std::string date = row.substr(0, found);
-        if (found != std::string::npos) {
-            std::string date = row.substr(0, found);
-            dates.push_back(date);
-        }
+        std::string date;
+        if (found != std::string::npos)
+            date = row.substr(0, found);
         else
-            dates.push_back(date);
+            date = row;
+        dates[dateCount] = date;
+        dateCount++;
     }
-    
-    for (unsigned long i = 0; i < dates.size(); i++) {
+
+    for (int i = 0; i < dateCount; i++){
         std::string date = dates[i];
         std::stringstream ss(date);
         std::string part;
@@ -73,41 +80,40 @@ std::vector<std::string> &Bitcoin::checkDates(std::vector<std::string> &rows) {
                     isValid = false;
                     break;
                 }
-                years.push_back(partInt);
-            } else if (partCount == 2) {
+                years[i] = partInt;
+            }
+            else if (partCount == 2) {
                 if (partInt < 1 || partInt > 12) {
                     isValid = false;
                     break;
                 }
-                months.push_back(partInt);
-            } else if (partCount == 3) {
+                months[i] = partInt;
+            }
+            else if (partCount == 3) {
                 int maxDays = 31;
-                if (months.back() == 2) {
+                if (months[i] == 2) {
                     maxDays = 28;
-                    if (years.back() % 4 == 0 && (years.back() % 100 != 0 || years.back() % 400 == 0)) {
+                    if (years[i] % 4 == 0 && (years[i] % 100 != 0 || years[i] % 400 == 0))
                         maxDays = 29;
-                    }
-                } else if (months.back() == 4 || months.back() == 6 || months.back() == 9 || months.back() == 11) {
-                    maxDays = 30;
                 }
+                else if (months[i] == 4 || months[i] == 6 || months[i] == 9 || months[i] == 11)
+                    maxDays = 30;
                 if (partInt < 1 || partInt > maxDays) {
                     isValid = false;
                     break;
                 }
-                days.push_back(partInt);
+                days[i] = partInt;
             }
         }
-
-        if (!isValid) {
+        if (!isValid)
             rows[i] = "Error: bad input => " + date;
-        }
     }
-
-    return rows;
 }
-std::vector<std::string> &Bitcoin::checkValue(std::vector<std::string> &rows) {
-    std::vector<std::string> valueStrs;
-    for (unsigned int i = 0; i < rows.size(); i++) {
+
+void Bitcoin::checkValue(std::string* rows, int size) {
+    std::string valueStrs[size];
+
+    for (int i = 0; i < size; i++) {
         if (rows[i].find("Error") != std::string::npos)
             continue;
         std::string row = rows[i];
@@ -120,26 +126,27 @@ std::vector<std::string> &Bitcoin::checkValue(std::vector<std::string> &rows) {
                     rows[i] = "Error: not a positive number.";
                 else if (num > 1000)
                     rows[i] = "Error: too large a number.";
-            } catch (const std::invalid_argument &e) {
+            }
+            catch (const std::invalid_argument& e) {
                 rows[i] = "Error: not a valid number.";
-            } catch (const std::out_of_range &e) {
+            }
+            catch (const std::out_of_range& e) {
                 rows[i] = "Error: too large a number.";
             }
-            valueStrs.push_back(value);
-        } else {
-            rows[i] = "Error: '|' character not found.";
+            valueStrs[i] = value;
         }
+        else
+            rows[i] = "Error: '|' character not found.";
     }
-    return rows;
 }
 
-void Bitcoin::fillData(std::vector<std::string> &rows) {
+
+void Bitcoin::fillData(std::string *rows, int size) {
     std::ifstream file("data.csv");
     std::string row;
     std::map<std::string, double> database;
 
-    // Read data from the file into the map
-    std::getline(file, row); // skip the first line
+    std::getline(file, row); 
     while (std::getline(file, row)) {
         size_t found = row.find(',');
         std::string date = row.substr(0, found);
@@ -148,38 +155,42 @@ void Bitcoin::fillData(std::vector<std::string> &rows) {
         database.insert(std::pair<std::string, double>(date, num));
     }
 
-    for (size_t i = 0; i < rows.size(); i++) {
+    int precision = 5;
+
+    for (int i = 0; i < size; i++) {
         if (rows[i].find("Error") != std::string::npos)
             continue;
         size_t found = rows[i].find('|');
         std::string date = rows[i].substr(0, found);
-        date = date.substr(0, date.size()-1);
+        date = date.substr(0, date.size() - 1);
         std::string value = rows[i].substr(found + 1);
         std::map<std::string, double>::iterator it = database.find(date);
         if (it != database.end()) {
             double result = it->second * std::stod(value);
-            rows[i] = date + " => " + value + " = " + std::to_string(result);
-        } else {
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(precision) << result;
+            std::string result_str = oss.str();
+            while (result_str.back() == '0')
+                result_str.pop_back();
+            if (result_str.back() == '.')
+                result_str.pop_back();
+            rows[i] = date + " => " + value + " = " + result_str;
+        }
+        else
+        {
             it = database.lower_bound(date);
             if (it != database.begin()) {
                 it--;
                 double result = it->second * std::stod(value);
-                rows[i] = it->first + " => " + value + " = " + std::to_string(result);
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(precision) << result;
+                std::string result_str = oss.str();
+                while (result_str.back() == '0')
+                    result_str.pop_back();
+                if (result_str.back() == '.')
+                    result_str.pop_back();
+                rows[i] = it->first + " => " + value + " = " + result_str;
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-/* std::istringstream iss(rows);
-        std::string token;
-        while (iss >> token) {
-            tokens.push_back(token);
-        } */

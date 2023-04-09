@@ -36,8 +36,6 @@ void PmergeMe::fillContainers(char **av) {
         vec_array.push_back(num);
         deq_array.push_back(num);
     }
-    sortAndMeasure();
-    
 }
 
 template<typename T>

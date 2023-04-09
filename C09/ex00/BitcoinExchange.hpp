@@ -3,6 +3,8 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <cmath>
+#include <iomanip>
 
 class Bitcoin {
     public:
@@ -16,7 +18,7 @@ class Bitcoin {
         int checkIsOpen(char **av) const;
         void readFile(char *av);
 
-        std::vector<std::string> &checkDates(std::vector<std::string> &rows);
-        std::vector<std::string> &checkValue(std::vector<std::string> &rows);
-        void fillData(std::vector<std::string> &rows);
+        void checkDates(std::string *rows, int size);
+        void checkValue(std::string *rows, int size);
+        void fillData(std::string *rows, int size);
 };

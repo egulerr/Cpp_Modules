@@ -1,13 +1,11 @@
-#include <iostream>
-#include <stack>
 #include "RPN.hpp"
 
 int main(int ac, char **av) {
     RPN rpn;
 
     if (ac == 2 && rpn.checkArguments(av[1])) {
-        rpn.initializeRPN();
+        rpn.initializeRPN(av[1]);
     }
     else
-        std::cout << "error" << std::endl;
+        std::cout << "Error" << std::endl;
 }
