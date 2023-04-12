@@ -40,78 +40,84 @@ void PmergeMe::fillContainers(char **av) {
 
 template<typename T>
 void PmergeMe::insertionSort(T& container) {
-    for (typename T::size_type i = 1; i < container.size(); i++) {
-        typename T::value_type temp = container[i];
-        typename T::size_type j = i - 1;
-        while (j >= 0 && container[j] > temp) {
-            container[j + 1] = container[j];
-            j--;
+    if (std::string(typeid(container).name()).find("deque") != std::string::npos) {
+        for (typename T::size_type i = 1; i < container.size(); i++) {
+            typename T::value_type temp = container[i];
+            typename T::size_type j = i;
+            while (j > 0 && container[j-1] > temp) {
+                container[j] = container[j-1];
+                j--;
+            }
+            container[j] = temp;
         }
-        container[j + 1] = temp;
+    }
+    else {
+        for (typename T::size_type i = 1; i < container.size(); i++) {
+            typename T::value_type temp = container[i];
+            typename T::size_type j = i - 1;
+            while (j >= 0 && container[j] > temp) {
+                container[j + 1] = container[j];
+                j--;
+            }
+            container[j + 1] = temp;
+        }
     }
 }
+
 
 
 void PmergeMe::sortAndMeasure() {
-    std::chrono::high_resolution_clock::time_point vec_start_time = std::chrono::high_resolution_clock::now();
-    mergeInsertSort(vec_array);
-    std::chrono::high_resolution_clock::time_point vec_end_time = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::micro> vec_elapsed_time = std::chrono::duration_cast<std::chrono::duration<double, std::micro> >(vec_end_time - vec_start_time);
-    std::cout << "Time to process a range of " << vec_array.size() << " elements with vec: std::[..] : " << vec_elapsed_time.count() << " us" << std::endl;
-
-    std::chrono::high_resolution_clock::time_point deq_start_time = std::chrono::high_resolution_clock::now();
-    mergeInsertSort(deq_array);
-    std::chrono::high_resolution_clock::time_point deq_end_time = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::micro> deq_elapsed_time = std::chrono::duration_cast<std::chrono::duration<double, std::micro> >(deq_end_time - deq_start_time);
-    std::cout << "Time to process a range of " << deq_array.size() << " elements with deq: std::[..] : " << deq_elapsed_time.count() << " us" << std::endl;
+    {
+        std::cout << "Before: ";
+        for (size_t i = 0; i < vec_array.size(); i++) {
+            if (i == 5) {
+                std::cout << "[...]";
+                break;
+            }
+            std::cout << vec_array[i] << " ";
+        }
+        std::clock_t start = std::clock();
+        mergeInsertSort(vec_array, 10);
+        std::clock_t end = std::clock();
+        double duration = (end - start) / (double)CLOCKS_PER_SEC * 1000000;
+        std::cout << "\n" << "After: ";
+        for (size_t i = 0; i < vec_array.size(); i++) {
+            if (i == 5) {
+                std::cout << "[...]";
+                break;
+            }
+            std::cout << vec_array[i] << " ";
+        }
+        std::cout << "\n" << "Time to process a range of " << vec_array.size() << " elements with std::vector "
+        << std::fixed << std::setprecision(5) << duration << " us" << std::endl;
+    }
+    {
+        std::clock_t start = std::clock();
+        mergeInsertSort(deq_array, 10);
+        std::clock_t end = std::clock();
+        double duration = (end - start) / (double)CLOCKS_PER_SEC * 1000000;
+        std::cout << "Time to process a range of " << deq_array.size() << " elements with std::deque "
+        << std::fixed << std::setprecision(5) << duration << " us" << std::endl;
+    }
 }
 
-
-
 template<typename T>
-void PmergeMe::mergeInsertSort(T& container) {
-    const int size = container.size();
-    if (size == 2) {
-        if (container[0] > container[1])
-            std::swap(container[0], container[1]);
+void PmergeMe::mergeInsertSort(T& container, typename T::size_type threshold) {
+    typename T::size_type len = container.size();
+    if (len <= threshold) {
+        insertionSort(container);
         return;
     }
-    if (size <= 10){
-        insertionSort(container);
-        return ;
-    }
+    typename T::iterator begin = container.begin();
+    typename T::iterator mid = container.begin() + container.size() / 2;
+    typename T::iterator end = container.end();
+    T left_subcontainer(begin, mid);
+    T right_subcontainer(mid, end);
 
-    const int middle = size / 2;
-    typename T::iterator middle_it = container.begin() + middle;
-    T left_container(container.begin(), middle_it);
-    T right_container(middle_it, container.end());
+    mergeInsertSort(left_subcontainer, threshold);
+    mergeInsertSort(right_subcontainer, threshold);
     
-    mergeInsertSort(left_container);
-    mergeInsertSort(right_container);
-    
-    T merged_container;
-    typename T::const_iterator left_it = left_container.begin();
-    typename T::const_iterator right_it = right_container.begin();
-    
-    while (left_it != left_container.end() && right_it != right_container.end()) {
-        if (*left_it < *right_it) {
-            merged_container.push_back(*left_it);
-            ++left_it;
-        } else {
-            merged_container.push_back(*right_it);
-            ++right_it;
-        }
-    }
-    
-    while (left_it != left_container.end()) {
-        merged_container.push_back(*left_it);
-        ++left_it;
-    }
-    
-    while (right_it != right_container.end()) {
-        merged_container.push_back(*right_it);
-        ++right_it;
-    }
-    
-    std::copy(merged_container.begin(), merged_container.end(), container.begin());
+    std::merge(left_subcontainer.begin(), left_subcontainer.end(),
+               right_subcontainer.begin(), right_subcontainer.end(),
+               container.begin());
 }
