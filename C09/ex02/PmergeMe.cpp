@@ -1,4 +1,6 @@
 #include "PmergeMe.hpp"
+#include <malloc/malloc.h>
+
 
 PmergeMe::PmergeMe() {}
 
@@ -31,20 +33,20 @@ int PmergeMe::checkArgs(char **av)
 }
 
 void PmergeMe::fillContainers(char **av) {
-    for (size_t i = 1; av[i]; i++) {
+    for (size_t i = 1; av[i] != NULL; i++) {
         int num = std::stoi(av[i]);
         vec_array.push_back(num);
-        deq_array.push_back(num);
+		deq_array.push_front(num);
     }
 }
 
 template<typename T>
 void PmergeMe::insertionSort(T& container) {
     if (std::string(typeid(container).name()).find("deque") != std::string::npos) {
-        for (typename T::size_type i = 1; i < container.size(); i++) {
-            typename T::value_type temp = container[i];
-            typename T::size_type j = i;
-            while (j > 0 && container[j-1] > temp) {
+        for (size_t i = 1; i < container.size(); i++) {
+           	int temp = container[i];
+            size_t j = i;
+            while (j > 0 && container[j-1] >= temp) {
                 container[j] = container[j-1];
                 j--;
             }
@@ -52,9 +54,9 @@ void PmergeMe::insertionSort(T& container) {
         }
     }
     else {
-        for (typename T::size_type i = 1; i < container.size(); i++) {
-            typename T::value_type temp = container[i];
-            typename T::size_type j = i - 1;
+        for (size_t i = 1; i < container.size(); i++) {
+			int temp = container[i];
+            int j = i - 1;
             while (j >= 0 && container[j] > temp) {
                 container[j + 1] = container[j];
                 j--;
@@ -65,12 +67,11 @@ void PmergeMe::insertionSort(T& container) {
 }
 
 
-
 void PmergeMe::sortAndMeasure() {
     {
         std::cout << "Before: ";
         for (size_t i = 0; i < vec_array.size(); i++) {
-            if (i == 5) {
+            if (i >= 4) {
                 std::cout << "[...]";
                 break;
             }
@@ -82,7 +83,7 @@ void PmergeMe::sortAndMeasure() {
         double duration = (end - start) / (double)CLOCKS_PER_SEC * 1000000;
         std::cout << "\n" << "After: ";
         for (size_t i = 0; i < vec_array.size(); i++) {
-            if (i == 5) {
+            if (i >= 4) {
                 std::cout << "[...]";
                 break;
             }
@@ -102,8 +103,8 @@ void PmergeMe::sortAndMeasure() {
 }
 
 template<typename T>
-void PmergeMe::mergeInsertSort(T& container, typename T::size_type threshold) {
-    typename T::size_type len = container.size();
+void PmergeMe::mergeInsertSort(T& container, size_t threshold) {
+    size_t len = container.size();
     if (len <= threshold) {
         insertionSort(container);
         return;
@@ -116,7 +117,6 @@ void PmergeMe::mergeInsertSort(T& container, typename T::size_type threshold) {
 
     mergeInsertSort(left_subcontainer, threshold);
     mergeInsertSort(right_subcontainer, threshold);
-    
     std::merge(left_subcontainer.begin(), left_subcontainer.end(),
                right_subcontainer.begin(), right_subcontainer.end(),
                container.begin());

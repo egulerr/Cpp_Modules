@@ -2,6 +2,10 @@
 #include <deque>
 #include <vector>
 #include <iomanip>
+
+using std::cout;
+using std::endl;
+
 class PmergeMe {
     public:
         std::vector<int> vec_array;
@@ -15,7 +19,7 @@ class PmergeMe {
         int checkArgs(char **av);
         void fillContainers(char **av);
         template<typename T>
-        void mergeInsertSort(T& container, typename T::size_type threshold);
+        void mergeInsertSort(T& container, size_t threshold);
         void sortAndMeasure();
         template<typename T>
         void insertionSort(T& container);
