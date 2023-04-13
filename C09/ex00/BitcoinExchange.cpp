@@ -12,8 +12,8 @@ Bitcoin &Bitcoin::operator=(const Bitcoin &ref){
     return (*this);
 }
 
-int Bitcoin::checkIsOpen(char **av) const {
-    std::ifstream file(av[1]);
+int Bitcoin::checkIsOpen(char *av) const {
+    std::ifstream file(av);
     if (file.good())
         return (1);
     else
@@ -174,6 +174,8 @@ void Bitcoin::fillData(std::string *rows, int size) {
         else
         {
             it = btc_map.lower_bound(date);
+            std::cout << it->first << std::endl;
+            getchar();
             if (it != btc_map.begin()) {
                 it--;
                 double result = it->second * std::stod(value);

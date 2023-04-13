@@ -94,7 +94,11 @@ int RPN::executeOperation(char operatr, int num, int num2)
 		result = num * num2;
 		break;
 	case '/':
-		result = num / num2;
+		if (num2 == 0) {
+            throw std::runtime_error("a number cannot be divided by 0");
+        }
+		else
+			result = num / num2;
 		break;
 	default:
 		break;
@@ -123,13 +127,19 @@ void RPN::initializeRPN(char *av) {
 		if (str[i] >= '0' && str[i] <= '9') {
 			rpn_stack.push(str[i] - '0');
 		} else {
-			if (rpn_stack.size() >= 2) {
+			if (rpn_stack.size() >= 2 && !rpn_stack.empty()) {
 				int num2 = rpn_stack.top();
 				rpn_stack.pop();
 				int num1 = rpn_stack.top();
 				rpn_stack.pop();
-				int res = executeOperation(str[i], num1, num2);
- 				rpn_stack.push(res);
+				try {
+					int res = executeOperation(str[i], num1, num2);
+					rpn_stack.push(res);
+				}
+				catch(const std::exception& e){
+					std::cerr << "Error: " << e.what() << '\n';
+					exit(1);
+				}
 			}
 			else {
 				std::cout << "RPN format is not correct!" << std::endl;
@@ -138,7 +148,7 @@ void RPN::initializeRPN(char *av) {
 			}
 		}
 	}
-	if (error != true)
+	if (error != true && !rpn_stack.empty() )
 		std::cout << rpn_stack.top() << std::endl;
 	delete[] str; 
 }
