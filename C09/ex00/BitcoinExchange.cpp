@@ -26,14 +26,12 @@ void Bitcoin::readFile(char *av) {
     std::string *rows = nullptr;
     int size = 0;
 
-    std::getline(file, row); 
-    while (std::getline(file, row))
-    {
+    while (std::getline(file, row)){
         std::string *temp = new std::string[size + 1];
         for (int i = 0; i < size; i++)
             temp[i] = rows[i];
-        delete[] rows;    
-        rows = temp;     
+        delete[] rows;
+        rows = temp;
         rows[size] = row;
         size++;          
     }
@@ -48,9 +46,9 @@ void Bitcoin::readFile(char *av) {
 void Bitcoin::checkDates(std::string *rows, int size) {
     int maxDateCount = size;
     std::string dates[maxDateCount];
-    int years[maxDateCount];
-    int months[maxDateCount];
-    int days[maxDateCount];
+    int years[100];
+    int months[100];
+    int days[100];
     int dateCount = 0;
 
     for (int i = 0; i < size; i++) {
@@ -68,6 +66,7 @@ void Bitcoin::checkDates(std::string *rows, int size) {
     for (int i = 0; i < dateCount; i++){
         std::string date = dates[i];
         std::stringstream ss(date);
+      
         std::string part;
         int partCount = 0;
         bool isValid = true;
@@ -111,8 +110,6 @@ void Bitcoin::checkDates(std::string *rows, int size) {
 }
 
 void Bitcoin::checkValue(std::string* rows, int size) {
-    std::string valueStrs[size];
-
     for (int i = 0; i < size; i++) {
         if (rows[i].find("Error") != std::string::npos)
             continue;
@@ -133,7 +130,6 @@ void Bitcoin::checkValue(std::string* rows, int size) {
             catch (const std::out_of_range& e) {
                 rows[i] = "Error: too large a number.";
             }
-            valueStrs[i] = value;
         }
         else
             rows[i] = "Error: '|' character not found.";
@@ -144,15 +140,14 @@ void Bitcoin::checkValue(std::string* rows, int size) {
 void Bitcoin::fillData(std::string *rows, int size) {
     std::ifstream file("data.csv");
     std::string row;
-    std::map<std::string, double> database;
 
-    std::getline(file, row); 
+    std::getline(file, row);
     while (std::getline(file, row)) {
         size_t found = row.find(',');
         std::string date = row.substr(0, found);
         std::string value = row.substr(found + 1);
         double num = std::stod(value);
-        database.insert(std::pair<std::string, double>(date, num));
+        btc_map.insert(std::pair<std::string, double>(date, num));
     }
 
     int precision = 5;
@@ -164,8 +159,8 @@ void Bitcoin::fillData(std::string *rows, int size) {
         std::string date = rows[i].substr(0, found);
         date = date.substr(0, date.size() - 1);
         std::string value = rows[i].substr(found + 1);
-        std::map<std::string, double>::iterator it = database.find(date);
-        if (it != database.end()) {
+        std::map<std::string, double>::iterator it = btc_map.find(date);
+        if (it != btc_map.end()) {
             double result = it->second * std::stod(value);
             std::ostringstream oss;
             oss << std::fixed << std::setprecision(precision) << result;
@@ -178,8 +173,8 @@ void Bitcoin::fillData(std::string *rows, int size) {
         }
         else
         {
-            it = database.lower_bound(date);
-            if (it != database.begin()) {
+            it = btc_map.lower_bound(date);
+            if (it != btc_map.begin()) {
                 it--;
                 double result = it->second * std::stod(value);
                 std::ostringstream oss;

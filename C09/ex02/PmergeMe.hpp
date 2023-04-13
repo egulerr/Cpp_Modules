@@ -23,4 +23,5 @@ class PmergeMe {
         void sortAndMeasure();
         template<typename T>
         void insertionSort(T& container);
+        void displayContainer();
 };

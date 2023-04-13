@@ -118,19 +118,28 @@ char *RPN::trimSpaces(char *av) {
 
 void RPN::initializeRPN(char *av) {
 	char *str = trimSpaces(av);
+	bool error = false;
 	for (int i = 0; str[i] != '\0'; i++) {
 		if (str[i] >= '0' && str[i] <= '9') {
 			rpn_stack.push(str[i] - '0');
 		} else {
-			int num2 = rpn_stack.top();
-			rpn_stack.pop();
-			int num1 = rpn_stack.top();
-			rpn_stack.pop();
-			int res = executeOperation(str[i], num1, num2);
- 			rpn_stack.push(res);
+			if (rpn_stack.size() >= 2) {
+				int num2 = rpn_stack.top();
+				rpn_stack.pop();
+				int num1 = rpn_stack.top();
+				rpn_stack.pop();
+				int res = executeOperation(str[i], num1, num2);
+ 				rpn_stack.push(res);
+			}
+			else {
+				std::cout << "RPN format is not correct!" << std::endl;
+				error = true;
+				break;
+			}
 		}
 	}
-	std::cout << rpn_stack.top() << std::endl;
+	if (error != true)
+		std::cout << rpn_stack.top() << std::endl;
 	delete[] str; 
 }
 

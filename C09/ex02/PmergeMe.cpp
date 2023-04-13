@@ -66,29 +66,29 @@ void PmergeMe::insertionSort(T& container) {
     }
 }
 
+void PmergeMe::displayContainer() {
+    for (size_t i = 0; i < vec_array.size(); i++) {
+        if (i >= 10) {
+            std::cout << "[...]";
+            break;
+        }
+        std::cout << vec_array[i] << " ";
+    }
+}
 
 void PmergeMe::sortAndMeasure() {
     {
         std::cout << "Before: ";
-        for (size_t i = 0; i < vec_array.size(); i++) {
-            if (i >= 4) {
-                std::cout << "[...]";
-                break;
-            }
-            std::cout << vec_array[i] << " ";
-        }
+        displayContainer();
+
         std::clock_t start = std::clock();
         mergeInsertSort(vec_array, 10);
         std::clock_t end = std::clock();
         double duration = (end - start) / (double)CLOCKS_PER_SEC * 1000000;
+
         std::cout << "\n" << "After: ";
-        for (size_t i = 0; i < vec_array.size(); i++) {
-            if (i >= 4) {
-                std::cout << "[...]";
-                break;
-            }
-            std::cout << vec_array[i] << " ";
-        }
+        displayContainer();
+
         std::cout << "\n" << "Time to process a range of " << vec_array.size() << " elements with std::vector "
         << std::fixed << std::setprecision(5) << duration << " us" << std::endl;
     }
